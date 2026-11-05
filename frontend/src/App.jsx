@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import diccionario from '../../diccionario/guna_dictionary.json'
+import { traducirTexto } from './traductor'
 import * as pdfjsLib from 'pdfjs-dist/build/pdf.mjs'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
@@ -7,58 +7,75 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString()
 
+const TUTOR_URL = 'http://localhost:3001/api/tutor'
+
+const NOMBRE_FUENTE = {
+  claude: 'Claude (con internet)',
+  ollama: 'IA local Ollama (sin internet)',
+  diccionario: 'Solo diccionario (la IA no respondió)',
+}
+
 function App() {
   const [direccion, setDireccion] = useState('es-guna')
   const [textoEntrada, setTextoEntrada] = useState('')
   const [elementosTraducidos, setElementosTraducidos] = useState([])
+  const [respuestaTutor, setRespuestaTutor] = useState(null)
+  const [cargandoTutor, setCargandoTutor] = useState(false)
+  const [preguntaChat, setPreguntaChat] = useState('')
 
   const traducirLocal = (textoABuscar = textoEntrada) => {
     if (!textoABuscar.trim()) {
-      setElementosTraducidos([{ texto: 'Por favor, escribe o sube un documento primero.', traducido: false }])
+      setElementosTraducidos([{ id: 0, texto: 'Por favor, escribe o sube un documento primero.', traducido: false }])
       return
     }
+    setElementosTraducidos(traducirTexto(textoABuscar, direccion))
+  }
 
-    const palabras = textoABuscar.split(/(\s+)/)
-    let resultadoEstructurado = []
-
-    palabras.forEach((palabra, index) => {
-      const limpia = palabra.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()¿?¡!]/g,"").trim()
-      
-      if (!limpia) {
-        resultadoEstructurado.push({ id: index, texto: palabra, traducido: false, esEspacio: true })
-        return
-      }
-
-      const coincidencia = diccionario.find(item => {
-        if (direccion === 'es-guna') {
-          return item.espanol.toLowerCase() === limpia
-        } else {
-          return item.guna.toLowerCase() === limpia
-        }
+  const consultarTutor = async (modo, pregunta = '') => {
+    if (!textoEntrada.trim()) {
+      setRespuestaTutor({ respuesta: 'Primero escribe o sube un documento.', fuente: '', vocabulario: [] })
+      return
+    }
+    setCargandoTutor(true)
+    setRespuestaTutor(null)
+    try {
+      const r = await fetch(TUTOR_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ modo, texto: textoEntrada, pregunta }),
       })
-
-      if (coincidencia) {
-        const terminoTraducido = direccion === 'es-guna' ? coincidencia.guna : coincidencia.espanol
-        resultadoEstructurado.push({ id: index, texto: terminoTraducido, traducido: true })
-      } else {
-        resultadoEstructurado.push({ id: index, texto: palabra, traducido: false })
-      }
-    })
-
-    setElementosTraducidos(resultadoEstructurado)
+      if (!r.ok) throw new Error(`El tutor respondió ${r.status}`)
+      setRespuestaTutor(await r.json())
+    } catch (error) {
+      console.error(error)
+      setRespuestaTutor({
+        respuesta: 'No pude conectar con el tutor. Revisa que el servidor siga encendido en la otra terminal (npm.cmd start).',
+        fuente: '',
+        vocabulario: [],
+      })
+    } finally {
+      setCargandoTutor(false)
+    }
   }
 
   const handlePdfUpload = async (e) => {
     const file = e.target.files[0]
     if (!file) return
 
+    if (file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') {
+      const texto = await file.text()
+      setTextoEntrada(texto)
+      traducirLocal(texto)
+      return
+    }
+
     if (file.type !== 'application/pdf') {
-      alert('Por favor, sube un archivo PDF válido.')
+      alert('Por favor, sube un archivo PDF o TXT válido.')
       return
     }
 
     setTextoEntrada('Procesando texto del archivo PDF localmente...')
-    setElementosTraducidos([{ texto: 'Leyendo documento offline de forma segura...', traducido: false }])
+    setElementosTraducidos([{ id: 0, texto: 'Leyendo documento offline de forma segura...', traducido: false }])
 
     const reader = new FileReader()
     reader.onload = async (event) => {
@@ -71,13 +88,15 @@ function App() {
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i)
           const textContent = await page.getTextContent()
-          const textoPagina = textContent.items.map(item => item.str).join(' ')
+          const textoPagina = textContent.items
+            .map(item => item.str + (item.hasEOL ? '\n' : ' '))
+            .join('')
           textoExtraido += textoPagina + '\n'
         }
 
         if (textoExtraido.trim().length === 0) {
           setTextoEntrada('El PDF no contiene texto plano extraíble (podría ser una imagen escaneada).')
-          setElementosTraducidos([{ texto: 'No se encontraron caracteres seleccionables.', traducido: false }])
+          setElementosTraducidos([{ id: 0, texto: 'No se encontraron caracteres seleccionables.', traducido: false }])
           return
         }
 
@@ -87,7 +106,7 @@ function App() {
       } catch (error) {
         console.error(error)
         setTextoEntrada('Error al decodificar el archivo PDF.')
-        setElementosTraducidos([{ texto: 'Ocurrió un problema al procesar el archivo localmente.', traducido: false }])
+        setElementosTraducidos([{ id: 0, texto: 'Ocurrió un problema al procesar el archivo localmente.', traducido: false }])
       }
     }
     reader.readAsArrayBuffer(file)
@@ -105,7 +124,7 @@ function App() {
         </h1>
         <p className="app-subtitle">Reto 06 — hack4edu</p>
       </div>
-      
+
       <div className="dashboard-grid">
         <div className="selector-box">
           <label><strong> Dirección del Idioma:</strong></label>
@@ -116,16 +135,16 @@ function App() {
         </div>
 
         <div className="field-group">
-          <label><strong>Cargar Material Escolar (PDF):</strong></label>
-          <input type="file" id="pdf-file" accept=".pdf" onChange={handlePdfUpload} />
+          <label><strong>Cargar Material Escolar (PDF o TXT):</strong></label>
+          <input type="file" id="pdf-file" accept=".pdf,.txt" onChange={handlePdfUpload} />
         </div>
       </div>
 
       <div className="field-group" style={{ marginBottom: '25px' }}>
         <label><strong>Texto extraído o digitado manualmente:</strong></label>
-        <textarea 
-          value={textoEntrada} 
-          onChange={(e) => setTextoEntrada(e.target.value)} 
+        <textarea
+          value={textoEntrada}
+          onChange={(e) => setTextoEntrada(e.target.value)}
           placeholder="El texto de tu PDF aparecerá aquí, o puedes escribir libremente para traducir..."
         />
       </div>
@@ -143,9 +162,10 @@ function App() {
             <span style={{ color: '#a0aec0', fontStyle: 'italic' }}>El resultado traducido aparecerá aquí automáticamente...</span>
           ) : (
             elementosTraducidos.map((item) => (
-              <span 
-                key={item.id} 
-                style={{ 
+              <span
+                key={item.id}
+                title={item.alternativas}
+                style={{
                   backgroundColor: item.traducido ? 'var(--warm-gold)' : 'transparent',
                   color: '#000000',
                   fontWeight: item.traducido ? '700' : '400',
@@ -160,6 +180,62 @@ function App() {
           )}
         </div>
       </div>
+
+      {/* ---------- Tutor con IA ---------- */}
+      <div className="field-group" style={{ marginTop: '25px' }}>
+        <label><strong>Tutor con IA:</strong></label>
+        <button className="btn-translate" style={{ marginTop: '10px' }} disabled={cargandoTutor} onClick={() => consultarTutor('explicar')}>
+          Explicar el documento
+        </button>
+        <button className="btn-translate" style={{ marginTop: '10px' }} disabled={cargandoTutor} onClick={() => consultarTutor('ensenar')}>
+          Enseñar las palabras en guna
+        </button>
+        <button className="btn-translate" style={{ marginTop: '10px' }} disabled={cargandoTutor} onClick={() => consultarTutor('preguntas')}>
+          Preguntas de práctica
+        </button>
+        <input
+          type="text"
+          value={preguntaChat}
+          onChange={(e) => setPreguntaChat(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter' && preguntaChat.trim()) consultarTutor('chat', preguntaChat) }}
+          placeholder="Pregúntale algo al tutor sobre el documento..."
+          style={{ width: '100%', padding: '10px', marginTop: '10px', boxSizing: 'border-box' }}
+        />
+        <button className="btn-translate" style={{ marginTop: '10px' }} disabled={cargandoTutor || !preguntaChat.trim()} onClick={() => consultarTutor('chat', preguntaChat)}>
+          Preguntar
+        </button>
+      </div>
+
+      {(cargandoTutor || respuestaTutor) && (
+        <div className="output-box">
+          <div className="output-title">
+            <label><strong>Respuesta del tutor:</strong></label>
+          </div>
+          <div className="output-text" style={{ whiteSpace: 'pre-wrap' }}>
+            {cargandoTutor
+              ? 'El tutor está pensando... (la primera respuesta puede tardar un poco)'
+              : respuestaTutor.respuesta}
+          </div>
+          {!cargandoTutor && respuestaTutor?.fuente && (
+            <p style={{ fontSize: '0.85em', marginTop: '8px' }}>
+              Fuente: {NOMBRE_FUENTE[respuestaTutor.fuente] || respuestaTutor.fuente}
+            </p>
+          )}
+                    {!cargandoTutor && respuestaTutor?.vocabulario?.length > 0 && (
+            <div style={{ marginTop: '12px' }}>
+              <strong>Vocabulario en guna encontrado en el documento:</strong>
+              <ul>
+                {respuestaTutor.vocabulario.map((v) => (
+                  <li key={v.espanol}>
+                    {v.espanol} → <strong>{v.guna.join(' / ')}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+      )}
     </div>
   )
 }

@@ -1955,8 +1955,7 @@
   { "espanol": "neblina", "guna": "boo" },
   { "espanol": "neblina, bruma", "guna": "boo" },
   { "espanol": "negligencia", "guna": "wied" },
-  { "espanol": "negocio", "guna": "ibya" },
-  { "espanol": "negro (color)", "guna": "sidsid" },
+  { "espanol": "negocio", "guna": "ibya" },  { "espanol": "negro (color)", "guna": "sidsid" },
   { "espanol": "negro, oscuro, prieto", "guna": "sidsid" },
   { "espanol": "nene o nena", "guna": "gwarugwa" },
   { "espanol": "nido", "guna": "u" },
@@ -2177,6 +2176,7 @@
   { "espanol": "perderse, morir, fallecer", "guna": "surgued" },
   { "espanol": "perdiz", "guna": "buddu" },
   { "espanol": "perdiz de rastrojo", "guna": "suir" },
+
   { "espanol": "pereza", "guna": "wied" },
   { "espanol": "pereza, negligencia", "guna": "wied" },
   { "espanol": "perezoso", "guna": "wiegala" },
