@@ -1,111 +1,229 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* Paleta de colores calurosos, cálidos y acogedores */
+  --warm-terracotta: #e05a47;   /* Rojo arcilla mola cálido */
+  --warm-gold: #f39c12;         /* Amarillo mola profundo para resaltados */
+  --warm-sand: #fdfaf6;         /* Fondo crema/arena ultra suave a la vista */
+  --dark-charcoal: #2c3e50;     /* Texto oscuro suave para lectura prolongada */
+  --border-color: #e6dfd5;      /* Bordes sutiles en tono tierra suave */
+  
+  /* Colores Oficiales para el título de la Bandera de Panamá */
+  --flag-blue: #005293;
+  --flag-white: #ffffff;
+  --flag-red: #da121a;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  --shadow-sm: 0 4px 10px rgba(224, 90, 71, 0.04);
+  --shadow-md: 0 12px 40px rgba(44, 62, 80, 0.06);
 }
 
 body {
   margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--warm-sand);
+  color: var(--dark-charcoal);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
+/* Contenedor Principal */
+.app-container {
+  background: #ffffff;
+  max-width: 900px;
+  width: 95%;
+  margin: 40px auto;
+  padding: 45px;
+  border-radius: 24px;
+  box-shadow: var(--shadow-md);
+  border-top: 8px solid var(--warm-terracotta);
+}
+
+/* Cabecera y Logo Animado */
+.app-header {
   text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  margin-bottom: 35px;
+  border-bottom: 2px dashed var(--border-color);
+  padding-bottom: 25px;
+}
+
+.app-logo {
+  font-size: 3.2rem;
+  margin-bottom: 12px;
+  display: inline-block;
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Efecto Tricolor Bandera de Panamá para RAIZIA */
+.tricolor-title {
+  font-size: 2.8rem;
+  margin: 0;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  gap: 0px;
+}
+
+.part-blue {
+  color: var(--flag-blue);
+}
+
+.part-white {
+  color: var(--flag-white);
+  /* Sombra delgada oscura para que las letras blancas resalten en fondos claros */
+  text-shadow: 
+    -1px -1px 0 #1e293b,  
+     1px -1px 0 #1e293b,
+    -1px  1px 0 #1e293b,
+     1px  1px 0 #1e293b;
+}
+
+.part-red {
+  color: var(--flag-red);
+}
+
+.app-subtitle {
+  color: #8e8d8a;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/* Grid de opciones principales */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Componentes de los formularios */
+.selector-box, .field-group {
+  background: #fffcf9; /* Tono cálido interno */
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+label {
+  font-size: 0.85rem;
+  color: #5d5c58;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+select, textarea, input[type="file"] {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #dcd7cc;
+  background: #ffffff;
+  font-size: 1rem;
+  color: var(--dark-charcoal);
   box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--warm-terracotta);
+  box-shadow: 0 0 0 3px rgba(224, 90, 71, 0.15);
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+textarea {
+  height: 200px;
+  resize: vertical;
+  line-height: 1.6;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+/* Botón de carga nativo con estilo premium */
+input[type="file"]::file-selector-button {
+  background: var(--dark-charcoal);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-right: 14px;
+  transition: background 0.2s;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+input[type="file"]::file-selector-button:hover {
+  background: #1a252f;
+}
+
+/* Botón de acción principal */
+.btn-translate {
+  width: 100%;
+  background: var(--warm-terracotta);
+  color: white;
+  border: none;
+  padding: 18px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(224, 90, 71, 0.25);
+  transition: all 0.2s ease;
+  margin-bottom: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-translate:hover {
+  background: #cb4e3c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(224, 90, 71, 0.35);
+}
+
+.btn-translate:active {
+  transform: translateY(0);
+}
+
+/* Contenedor de la Traducción Realizada */
+.output-box {
+  border-left: 6px solid var(--warm-gold);
+  background: #fffef2; /* Fondo amarillo cálido ultra sutil */
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  border-top: 1px solid #fef3c7;
+  border-right: 1px solid #fef3c7;
+  border-bottom: 1px solid #fef3c7;
+}
+
+.output-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.output-text {
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: #1a252f;
+}
+
+/* Animación del Logotipo */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
 }

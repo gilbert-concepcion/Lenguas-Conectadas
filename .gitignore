@@ -5,3 +5,6 @@
 /app/.dart_tool/
 /app/.packages
 /app/build/
+node_modules/
+package-lock.json
+package.json
