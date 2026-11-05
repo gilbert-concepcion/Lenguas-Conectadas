@@ -1,0 +1,69 @@
+[
+  { "espanol": "En el principio creó Dios los cielos y la tierra", "guna": "Neg-asichid-gala, Bab Dummad nibned, degine, napgued obinnid" },
+  { "espanol": "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna", "guna": "Bab Dummad igi we-napgued-gi-gudidimalad-sabgusa, degisoggu, e-Machi-wargwen-gualid ubsad, adi bela e-gi-bensulidimalad murgu-guo-sulid, degi-inigwele, degisadegu-gulaid-san-nika gued gala" }
+  { "espanol": "Los niños aprenden una buena educación en la escuela", "guna": "Mimmigan odurdagednega-gi nue igar durdagebalid" },
+  { "espanol": "adiós", "guna": "banemalo" },
+  { "espanol": "adiós", "guna": "banmalo" },
+  { "espanol": "apuntes", "guna": "garda narmaked" },
+  { "espanol": "biblioteca", "guna": "gardamar urbednega" },
+  { "espanol": "bien", "guna": "nuedi" },
+  { "espanol": "bolígrafo", "guna": "narmaked ibmar" },
+  { "espanol": "buen documento", "guna": "garda nued" },
+  { "espanol": "cuaderno de notas", "guna": "garda narmaked" },
+  { "espanol": "disciplina", "guna": "sogedba nued" },
+  { "espanol": "excelente", "guna": "nued" },
+  { "espanol": "excelente", "guna": "nuedi" },
+  { "espanol": "hola, ¿cómo están?", "guna": "degidde nuegambi" },
+  { "espanol": "inteligencia", "guna": "binsaed nued" },
+  { "espanol": "lápiz", "guna": "narmaked ibmar" },
+  { "espanol": "libro de texto", "guna": "garda nued" },
+  { "espanol": "normas", "guna": "igar mamaid" },
+  { "espanol": "obediencia positiva", "guna": "sogedba nued" },
+  { "espanol": "pensamiento", "guna": "binasaed" },
+  { "espanol": "pensamiento", "guna": "kensad" },
+  { "espanol": "reflexión", "guna": "binasaed" },
+  { "espanol": "reflexión", "guna": "kensad" },
+  { "espanol": "reglas de la escuela", "guna": "igar mamaid" },
+  { "espanol": "sabiduría", "guna": "binsaed nued" },
+  { "espanol": "útil de escritura", "guna": "narmaked ibmar" }
+  {
+    "espanol": "Abre tu libro.",
+    "guna": "Be garda ebi."
+  },
+  {
+    "espanol": "Toma el lápiz.",
+    "guna": "Narmaked ibmar subale."
+  },
+  {
+    "espanol": "Piensa con atención / Analiza bien.",
+    "guna": "Suku-suku binsae."
+  },
+  {
+    "espanol": "Así aprenderemos las buenas costumbres.",
+    "guna": "Reyba igar nued durdagemalo."
+  },
+  {
+    "espanol": "Este estudiante demostró saber mucho.",
+    "guna": "We durdaged nue wisgused."
+  },
+  {
+    "espanol": "Escribió un buen trabajo de investigación.",
+    "guna": "Arbaed nued narmaksad."
+  },
+  {
+    "espanol": "Vamos a desarrollar su pensamiento.",
+    "guna": "E-binsaed odurdagemalo."
+  },
+  {
+    "espanol": "Los maestros brindan una educación de calidad a los niños en la escuela. Por lo tanto, toda la comunidad debe trabajar en conjunto para que los niños sigan un buen camino y también conserven su lengua nativa.",
+    "guna": "Odurdagedmar durdagednega-gi mimmiganga nued odurdaged ugbbalid. Degisoggu, bela negwebur emarba arbaergebed adi mimmigan igar nuedba namaloga, degine, e-gaya abarmaloga moga."
+  },
+  {
+    "espanol": "Los cuadernos y los diccionarios escolares son de gran importancia en este proceso educativo. Los estudiantes consultan todo el material escrito en los libros para adquirir una verdadera sabiduría.",
+    "guna": "Garda narmakedmar degine gayamar sabga we odurdaged igar-gi ibmar dummad gued. Durdagedmar bela ibmar nudakmalad garda-gi narmakarmaid adi binsaed nued san-nika gumaloga."
+  },
+  {
+    "espanol": "El plan de estudio es fundamental en nuestra sociedad. Los niños aprenden tanto las materias del mundo exterior como la historia establecida por nuestros ancestros. Esta es la verdadera educación integral.",
+    "guna": "Odurdaged igar dummad gued anmar dulaneg-gi. Mimmigan durdagemalad igi napgued-gi ibmar mamaid degi anmar dulesailamar igar obinnisad moga. Weybe durdaged nuedid."
+  }
+]
