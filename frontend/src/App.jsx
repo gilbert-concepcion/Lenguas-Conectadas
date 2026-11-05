@@ -50,6 +50,7 @@ function App() {
   const [textoEntrada, setTextoEntrada] = useState('')
   const [elementosTraducidos, setElementosTraducidos] = useState([])
   const [listo, setListo] = useState(false)
+  const [traduciendo, setTraduciendo] = useState(false)
   const [respuestaTutor, setRespuestaTutor] = useState(null)
   const [cargandoTutor, setCargandoTutor] = useState(false)
   const [preguntaChat, setPreguntaChat] = useState('')
@@ -64,14 +65,24 @@ function App() {
     }
   }, [])
 
-  const traducirLocal = (textoABuscar = textoEntrada) => {
+  const traducirLocal = async (textoABuscar = textoEntrada) => {
     if (!textoABuscar.trim()) {
       setElementosTraducidos([{ id: 0, texto: 'Por favor, escribe o sube un documento primero.', traducido: false }])
       setListo(false)
       return
     }
-    setElementosTraducidos(traducirTexto(textoABuscar, direccion))
-    setListo(true)
+    setTraduciendo(true)
+    setListo(false)
+    try {
+      const resultado = await traducirTexto(textoABuscar, direccion)
+      setElementosTraducidos(resultado)
+      setListo(resultado.length > 0)
+    } catch (error) {
+      console.error(error)
+      setElementosTraducidos([{ id: 0, texto: 'Ocurrió un problema al traducir. Intenta de nuevo.', traducido: false }])
+    } finally {
+      setTraduciendo(false)
+    }
   }
 
   const descargarTraduccion = () => {
@@ -172,7 +183,7 @@ function App() {
 
   const salir = () => {
     cerrarSesion()
-    setSesion(null)
+        setSesion(null)
   }
 
   // Los hooks siempre van antes de este return
@@ -222,15 +233,17 @@ function App() {
                 onChange={(e) => setTextoEntrada(e.target.value)}
                 placeholder="El texto de tu PDF aparecerá aquí, o puedes escribir libremente para traducir..."
               />
-              <button className="btn btn-primario" onClick={() => traducirLocal()}>
-                Traducir ahora
+              <button className="btn btn-primario" disabled={traduciendo} onClick={() => traducirLocal()}>
+                {traduciendo ? 'Traduciendo...' : 'Traducir ahora'}
               </button>
             </div>
 
             <div className="card">
               <h2 className="card-title">Resultado de la traducción</h2>
               <div className="resultado">
-                {elementosTraducidos.length === 0 ? (
+                {traduciendo ? (
+                  <span className="placeholder">Traduciendo, puede tardar unos segundos...</span>
+                ) : elementosTraducidos.length === 0 ? (
                   <span className="placeholder">El resultado traducido aparecerá aquí automáticamente...</span>
                 ) : (
                   elementosTraducidos.map((item) => (
@@ -240,7 +253,7 @@ function App() {
                   ))
                 )}
               </div>
-              <button className="btn btn-exito" disabled={!listo} onClick={descargarTraduccion}>
+              <button className="btn btn-exito" disabled={!listo || traduciendo} onClick={descargarTraduccion}>
                 <Icono d={ICONO.descargar} />
                 Descargar traducción
               </button>
