@@ -4044,7 +4044,56 @@
 
 { "espanol": "puentes", "guna": "Igar-gagedmar" },
 
-{ "espanol": "nueva", "guna": "Binid" }
+{ "espanol": "nueva", "guna": "Binid" },
+{ "espanol": "trabajan", "guna": "Arbamalad" },
+{ "espanol": "caminan", "guna": "Nanamalad" },
+{ "espanol": "llevan", "guna": "Semalad" },
+{ "espanol": "comen", "guna": "Gunmalad" },
+{ "espanol": "beben", "guna": "Gobmalad" },
+
+{ "espanol": "comemos", "guna": "Anmar gunned" },
+{ "espanol": "hablamos", "guna": "Anmar sunmaked" },
+{ "espanol": "caminamos", "guna": "Anmar nanad" },
+{ "espanol": "tomamos", "guna": "Anmar sumed" },
+{ "espanol": "tomamos", "guna": "Gobed" },
+{ "espanol": "escribimos", "guna": "Anmar narmaked" },
+{ "espanol": "leemos", "guna": "Anmar absoged" },
+{ "espanol": "pensamos", "guna": "Anmar binsaged" },
+{ "espanol": "aprendemos", "guna": "Anmar duraged" },
+{ "espanol": "cantamos", "guna": "Anmar namunaded" },
+{ "espanol": "cantamos", "guna": "Namaked" },
+{ "espanol": "llegan", "guna": "Nonimalad" },
+{ "espanol": "dormimos", "guna": "Anmar gabed" },
+
+{ "espanol": "pan", "guna": "Madu" },
+
+{ "espanol": "hazme", "guna": "Anaga sae" },
+
+{ "espanol": "una", "guna": "Gwagwen" },
+
+{ "espanol": "lista", "guna": "Narmaklegad" },
+
+{ "espanol": "palabras", "guna": "Gaya" },
+{ "espanol": "palabras", "guna": "Gayamar" },
+
+{ "espanol": "que", "guna": "Idi" },
+
+{ "espanol": "aparecen", "guna": "Mag dakleged" },
+
+{ "espanol": "en", "guna": "Gi" },
+
+{ "espanol": "español", "guna": "Waga gaya" },
+
+{ "espanol": "a", "guna": "Se" },
+
+{ "espanol": "asgin", "guna": "Asgin" },
+
+{ "espanol": "dentro de", "guna": "Gi" },
+
+{ "espanol": "bien", "guna": "Nued" },
+{ "espanol": "gracias", "guna": "Nued" },
+
+{ "espanol": "hasta mañana", "guna": "Banemalo" }
 
   
 ]

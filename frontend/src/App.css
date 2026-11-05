@@ -1,106 +1,414 @@
+/* ===== RAIZIA · diseño para presentación (inspirado en los colores de las molas) ===== */
+
+:root {
+  --azul: #0e6f6f;
+  --azul-oscuro: #0b3c3f;
+  --rojo: #c8102e;
+  --warm-gold: #ffc233;
+  --verde: #12a37f;
+  --crema: #fffaf0;
+  --texto: #1f2a3d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
 body {
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: #f4f7f6;
   margin: 0;
-  padding: 20px;
+  min-height: 100vh;
+}
+
+body {
+  display: block !important;
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  color: var(--texto);
+  background: linear-gradient(135deg, #1b0b0f 0%, #7d0f24 50%, #e8591a 100%);
+  background-attachment: fixed;
+}
+
+#root {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 32px 16px 60px !important;
+  text-align: left !important;
   display: flex;
   justify-content: center;
 }
 
+/* ---------- Tarjeta principal ---------- */
 .app-container {
-  max-width: 600px;
+  position: relative;
   width: 100%;
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  margin-top: 40px;
+  max-width: 980px;
+  background: var(--crema);
+  border-radius: 24px;
+  padding: 0 40px 40px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  animation: aparecer 0.7s ease both;
 }
 
-h1 {
-  color: #2c3e50;
+/* banda de colores arriba, como el borde de una mola */
+.app-container::before {
+  content: '';
+  display: block;
+  height: 16px;
+  margin: 0 -40px 0;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--rojo) 0 28px,
+    var(--warm-gold) 28px 56px,
+    #111 56px 70px,
+    var(--verde) 70px 98px,
+    #111 98px 112px
+  );
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Encabezado ---------- */
+.app-header {
   text-align: center;
-  margin-bottom: 25px;
+  padding: 36px 0 26px;
+  margin-bottom: 30px;
 }
 
-.selector-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  background: #eef2f3;
-  padding: 12px;
-  border-radius: 8px;
+/* cenefa en zigzag, como las que se ven en las molas */
+.app-header::after {
+  content: '';
+  display: block;
+  height: 20px;
+  margin: 30px -40px 0;
+  background:
+    linear-gradient(135deg, var(--rojo) 25%, transparent 25%) -10px 0 / 20px 20px,
+    linear-gradient(225deg, var(--rojo) 25%, transparent 25%) -10px 0 / 20px 20px,
+    linear-gradient(315deg, var(--warm-gold) 25%, transparent 25%) 0 0 / 20px 20px,
+    linear-gradient(45deg, var(--warm-gold) 25%, transparent 25%) 0 0 / 20px 20px,
+    #111;
+}
+
+.tricolor-title {
+  margin: 0;
+  font-size: clamp(3rem, 9vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  filter: drop-shadow(0 6px 10px rgba(60, 10, 20, 0.35));
+}
+
+/* "RAI" rojo, "ZI" dorado con borde negro, "A" negro: colores de las molas */
+.part-blue {
+  color: var(--rojo);
+}
+
+.part-white {
+  color: var(--warm-gold);
+  -webkit-text-stroke: 6px #111;
+  paint-order: stroke fill;
+}
+
+.part-red {
+  color: #111;
+}
+
+/* eslogan */
+.app-slogan {
+  margin: 20px 0 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.1rem, 2.8vw, 1.6rem);
+  font-style: italic;
+  color: var(--rojo);
+}
+
+.app-slogan::before,
+.app-slogan::after {
+  content: '◆';
+  margin: 0 12px;
+  font-size: 0.7em;
+  color: var(--warm-gold);
+  text-shadow: 0 0 0 #111, 1px 1px 0 #111;
+}
+
+.app-subtitle {
+  display: inline-block;
+  margin: 18px 0 0;
+  padding: 6px 18px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.app-subtitle::after {
+  content: '  ·  Español ⇄ Dulegaya';
+  color: var(--warm-gold);
+}
+
+/* ---------- Paneles ---------- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.selector-box,
+.field-group {
+  background: #fff;
+  border: 2px solid #f0e4c8;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selector-box:hover,
+.field-group:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.selector-box label,
+.field-group label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--azul);
 }
 
 select {
-  padding: 8px 12px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background-color: white;
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1.05rem;
+  border-radius: 12px;
+  border: 2px solid var(--azul);
+  background: #fff;
+  color: var(--texto);
+  cursor: pointer;
 }
 
-.field-group {
-  margin-bottom: 20px;
+input[type='file'] {
+  width: 100%;
+  font-size: 0.95rem;
+  padding: 10px;
+  border: 2px dashed var(--azul);
+  border-radius: 12px;
+  background: #f1fafa;
+  cursor: pointer;
 }
 
-.field-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: #34495e;
+input[type='file']::file-selector-button {
+  margin-right: 12px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  background: var(--azul);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-input[type="file"] {
-  display: block;
-  margin-top: 5px;
+input[type='file']::file-selector-button:hover {
+  background: var(--azul-oscuro);
+}
+
+textarea,
+input[type='text'] {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 1.05rem;
+  font-family: inherit;
+  border: 2px solid #d9dee8;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--texto);
 }
 
 textarea {
-  width: 100%;
-  height: 120px;
-  padding: 12px;
-  box-sizing: border-box;
-  border: 2px solid #bdc3c7;
-  border-radius: 8px;
-  resize: none;
-  font-size: 16px;
-  font-family: inherit;
+  height: 170px;
+  resize: vertical;
 }
 
-textarea:focus {
-  border-color: #3498db;
+textarea:focus,
+input[type='text']:focus,
+select:focus {
   outline: none;
+  border-color: var(--rojo);
+  box-shadow: 0 0 0 4px rgba(200, 16, 46, 0.15);
 }
 
+/* ---------- Botones ---------- */
 .btn-translate {
-  background-color: #2ecc71;
-  color: white;
-  border: none;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
   width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--rojo), #ff6b3d);
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(200, 16, 46, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 
-.btn-translate:hover {
-  background-color: #27ae60;
+.btn-translate:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 16px 28px rgba(200, 16, 46, 0.5);
+  filter: brightness(1.05);
 }
 
+.btn-translate:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-translate:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+/* botones del tutor: más pequeños y en azul */
+.field-group .btn-translate {
+  width: auto;
+  display: inline-block;
+  margin-right: 10px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, var(--azul), #17a2a2);
+  box-shadow: 0 8px 18px rgba(14, 111, 111, 0.35);
+}
+
+.field-group .btn-translate:hover:not(:disabled) {
+  box-shadow: 0 12px 22px rgba(14, 111, 111, 0.45);
+}
+
+/* ---------- Resultados ---------- */
 .output-box {
-  margin-top: 25px;
-  background: #fafafa;
-  border-left: 5px solid #3498db;
-  padding: 15px;
-  min-height: 80px;
-  border-radius: 4px;
+  margin-top: 28px;
+  padding: 22px 24px;
+  background: #fff;
+  border-radius: 16px;
+  border-left: 8px solid var(--warm-gold);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  animation: aparecer 0.5s ease both;
+}
+
+.output-title label {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--azul);
 }
 
 .output-text {
-  color: #2c3e50;
-  font-size: 16px;
-  margin-top: 8px;
-  line-height: 1.5;
+  margin-top: 12px;
+  font-size: 1.2rem;
+  line-height: 2.1;
+  color: var(--texto);
+}
+
+/* palabras traducidas al guna: etiquetas brillantes */
+.output-text span[title] {
+  background: none !important;
+  color: inherit !important;
+  padding: 0 !important;
+  font-weight: 400 !important;
+  box-shadow: none;
+  cursor: default;
+}
+
+/* respuesta del tutor */
+.output-box ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  line-height: 1.8;
+}
+
+.output-box p {
+  margin: 12px 0 0;
+  color: var(--verde);
+  font-weight: 700;
+}
+
+/* ---------- Celulares ---------- */
+@media (max-width: 720px) {
+  .app-container {
+    padding: 0 18px 28px;
+  }
+  .app-container::before,
+  .app-header::after {
+    margin-left: -18px;
+    margin-right: -18px;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .app-subtitle::after {
+    content: '';
+  }
+}
+/* ---------- Frase ---------- */
+.app-pilares {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.app-pilares span {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  border: 2px solid #111;
+}
+
+.app-pilares span:nth-child(1) {
+  background: var(--rojo);
+  color: #fff;
+}
+
+.app-pilares span:nth-child(2) {
+  background: var(--warm-gold);
+  color: #111;
+}
+
+.app-pilares span:nth-child(3) {
+  background: var(--azul);
+  color: #fff;
+}
+
+.app-pilares span:nth-child(1)::before {
+  content: '🔗 ';
+}
+
+.app-pilares span:nth-child(2)::before {
+  content: '🌱 ';
+}
+
+.app-logo-img {
+  display: block;
+  margin: 0 auto 18px;
+  width: min(160px, 45%);
+  height: auto;
 }

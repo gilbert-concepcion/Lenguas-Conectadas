@@ -1,5 +1,6 @@
 import diccionario from '../../diccionario/guna_dictionary.json'
 import parrafos from '../../diccionario/parrafos.json'
+import ollama from 'ollama'
 
 // ======================================
 // 1. NORMALIZACIÓN
@@ -258,21 +259,17 @@ function palabraAPalabra(texto, direccion) {
 // 6. FUNCIÓN PRINCIPAL
 // ======================================
 
-export function traducirTexto(
+export async function traducirTexto(
     texto,
     direccion = 'es-guna'
 ) {
-
     if (!texto || !texto.trim()) {
         return []
     }
 
-    // Primero buscar el párrafo completo
-
+    // 1. Primero buscamos si el párrafo exacto ya está en parrafos.json
     const segmento = buscarSegmento(texto, direccion)
-
     if (segmento) {
-
         return [{
             id: 0,
             texto: segmento,
@@ -281,12 +278,80 @@ export function traducirTexto(
         }]
     }
 
-    // Si no existe, traducir expresiones y palabras
+    // 2. Si no es un párrafo exacto, extraemos el vocabulario usando tu función
+    const analisisPalabras = palabraAPalabra(texto, direccion)
+    // Español -> Guna: solo diccionario, sin IA, para no inventar palabras
+if (direccion === 'es-guna') {
+    return analisisPalabras.map((item, id) => ({ ...item, id }))
+}
+    
+    // Filtramos e hilamos solo las palabras que tu diccionario SÍ logró traducir
+    const vocabularioDetectado = analisisPalabras
+        .filter(item => item.traducido)
+        .map(item => `"${item.texto}" (${direccion === 'guna-es' ? 'español' : 'guna'})`)
+        .join(', ')
 
-    const resultado = palabraAPalabra(texto, direccion)
+    // 3. Configuramos las instrucciones sintácticas para Ollama según la dirección
+    let instruccionesSistema = ""
 
-    return resultado.map((item, id) => ({
-        ...item,
-        id
-    }))
+    if (direccion === 'guna-es') {
+        instruccionesSistema = `
+        Eres un traductor experto del idioma Guna al español fluido.
+        Tu tarea es recibir un párrafo en Guna y redactarlo en un español natural, correcto y perfectamente hilado.
+
+        Vocabulario clave detectado por el sistema: [ ${vocabularioDetectado} ]
+
+        REGLAS DE SINTAXIS FLUIDA:
+        1. REORDENACIÓN DE VERBOS: El Guna coloca el verbo al final. Debes mover obligatoriamente los verbos a su posición intermedia natural en español (Sujeto + Verbo + Objeto).
+        2. SUFIJOS LOCATIVOS: En Guna el sufijo "gi" equivale a la preposición "en". Por ejemplo, "diwala gi" se traduce como "en el río".
+        3. ARTÍCULOS: Añade los artículos necesarios (el, la, los, las, un, una) que hagan falta para que la lectura sea natural.
+
+        Devuelve exclusivamente el párrafo final en español. No añadas notas, comentarios ni saludos.
+        `
+    } else {
+        instruccionesSistema = `
+        Eres un traductor experto del español al idioma Guna (Dulegaya).
+        Tu tarea es recibir un párrafo en español y traducirlo respetando la gramática nativa Guna.
+
+        Vocabulario clave detectado por el sistema: [ ${vocabularioDetectado} ]
+
+        REGLAS DE SINTAXIS GUNA:
+        1. VERBO AL FINAL: Asegúrate de colocar el verbo o la acción al final de cada oración gramatical.
+        2. SUFIJOS: Integra las preposiciones como "en" convirtiéndolas en el sufijo "gi" acoplado al final del sustantivo.
+
+        Devuelve exclusivamente el párrafo final en Guna. No añadas introducciones ni explicaciones.
+        `
+    }
+
+    // 4. Ejecutamos la llamada a Ollama para que aplique la fluidez
+    try {
+        const respuesta = await ollama.chat({
+            model: 'llama3.2', // Modifica este nombre si usas otro modelo en Ollama
+            messages: [
+                { role: 'system', content: instruccionesSistema },
+                { role: 'user', content: texto }
+            ],
+            options: {
+                temperature: 0.15
+            }
+        })
+
+        const parrafoFluido = respuesta.message.content.trim()
+
+        return [{
+            id: 0,
+            texto: parrafoFluido,
+            traducido: true,
+            esFrase: true
+        }]
+
+    } catch (error) {
+        console.error("Error en Ollama, usando fallback literal:", error)
+        
+        // Si Ollama está apagado o falla, devuelve tu mapeo original palabra por palabra
+        return analisisPalabras.map((item, id) => ({
+            ...item,
+            id
+        }))
+    }
 }

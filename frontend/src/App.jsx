@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import { traducirTexto } from './traductor'
-import * as pdfjsLib from 'pdfjs-dist/build/pdf.mjs'
+import './App.css'
+import logo from './assets/Raiza1.svg'
+
+
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.mjs',
+  'pdfjs-dist/legacy/build/pdf.worker.mjs',
   import.meta.url
 ).toString()
 
@@ -23,13 +27,14 @@ function App() {
   const [cargandoTutor, setCargandoTutor] = useState(false)
   const [preguntaChat, setPreguntaChat] = useState('')
 
-  const traducirLocal = (textoABuscar = textoEntrada) => {
-    if (!textoABuscar.trim()) {
-      setElementosTraducidos([{ id: 0, texto: 'Por favor, escribe o sube un documento primero.', traducido: false }])
-      return
-    }
-    setElementosTraducidos(traducirTexto(textoABuscar, direccion))
+  const traducirLocal = async (textoABuscar = textoEntrada) => {
+  if (!textoABuscar.trim()) {
+    setElementosTraducidos([{ id: 0, texto: 'Por favor, escribe o sube un documento primero.', traducido: false }])
+    return
   }
+  setElementosTraducidos([{ id: 0, texto: 'Traduciendo...', traducido: false }])
+  setElementosTraducidos(await traducirTexto(textoABuscar, direccion))
+}
 
   const consultarTutor = async (modo, pregunta = '') => {
     if (!textoEntrada.trim()) {
@@ -105,7 +110,7 @@ function App() {
 
       } catch (error) {
         console.error(error)
-        setTextoEntrada('Error al decodificar el archivo PDF.')
+      setTextoEntrada('Error al leer el PDF: ' + (error?.message || String(error)))
         setElementosTraducidos([{ id: 0, texto: 'Ocurrió un problema al procesar el archivo localmente.', traducido: false }])
       }
     }
@@ -114,16 +119,21 @@ function App() {
 
   return (
     <div className="app-container">
-      <div className="app-header">
-        <div className="app-logo">(esperando a Stuffy)</div>
-        {/* Título Estructurado en Bloques Tricolor */}
-        <h1 className="tricolor-title">
-          <span className="part-blue">RAI</span>
-          <span className="part-white">ZI</span>
-          <span className="part-red">A</span>
-        </h1>
-        <p className="app-subtitle">Reto 06 — hack4edu</p>
-      </div>
+     <div className="app-header">
+      <img src={logo} alt="Logo RAIZIA" className="app-logo-img" />
+  <h1 className="tricolor-title">
+    <span className="part-blue">RAI</span>
+    <span className="part-white">ZI</span>
+    <span className="part-red">A</span>
+  </h1>
+  <p className="app-slogan">Tu lengua, tu raíz, tu identidad</p>
+  <div className="app-pilares">
+    <span>Conectando idiomas</span>
+    <span>Preservando raíces</span>
+    <span>Construyendo conocimientos</span>
+  </div>
+  <p className="app-subtitle"></p>
+</div>
 
       <div className="dashboard-grid">
         <div className="selector-box">
@@ -157,29 +167,22 @@ function App() {
         <div className="output-title">
           <span></span> <label><strong>Resultado de la Traducción Local:</strong></label>
         </div>
-        <div className="output-text" style={{ whiteSpace: 'pre-wrap' }}>
-          {elementosTraducidos.length === 0 ? (
-            <span style={{ color: '#a0aec0', fontStyle: 'italic' }}>El resultado traducido aparecerá aquí automáticamente...</span>
-          ) : (
-            elementosTraducidos.map((item) => (
-              <span
-                key={item.id}
-                title={item.alternativas}
-                style={{
-                  backgroundColor: item.traducido ? 'var(--warm-gold)' : 'transparent',
-                  color: '#000000',
-                  fontWeight: item.traducido ? '700' : '400',
-                  padding: item.traducido ? '2px 4px' : '0',
-                  borderRadius: item.traducido ? '4px' : '0',
-                  transition: 'background-color 0.3s'
-                }}
-              >
-                {item.texto}
-              </span>
-            ))
-          )}
-        </div>
+<div className="output-text" style={{ whiteSpace: 'pre-wrap' }}>
+  {elementosTraducidos.length === 0 ? (
+    <span style={{ color: '#a0aec0', fontStyle: 'italic' }}>El resultado traducido aparecerá aquí automáticamente...</span>
+  ) : (
+    elementosTraducidos.map((item) => (
+      <span
+        key={item.id}
+        title={item.alternativas}
+        style={{ color: 'inherit', fontWeight: item.traducido ? 700 : 400 }}
+      >
+        {item.texto}
+      </span>
+    ))
+  )}
       </div>
+    </div>
 
       {/* ---------- Tutor con IA ---------- */}
       <div className="field-group" style={{ marginTop: '25px' }}>
